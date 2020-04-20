@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoozoo.mapper.ParamMapper">
+
+    <!--添加项目到数据库-->
+    <insert id="insertOneParam" parameterType="com.yoozoo.bean.Param">
+        insert
+        into
+        param(apiId,paramName,paramDesc,paramType,paramCondition,paramValue,isGlobal,isDelete,createTime,updateTime)
+        values
+        (#{apiId},#{paramName},#{paramDesc},#{paramType},#{paramCondition},#{paramValue},#{isGlobal},#{isDelete},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--查询项目列表，若无查询条件则查询所有列表，若有查询条件，则根据查询条件查询
+    <select id="selectAllItems" parameterType="com.yoozoo.bean.Item" resultType="com.yoozoo.bean.Item">
+        select item.*,users.userName as userName
+        from item,users
+        <where>
+            item.userId = users.userId
+
+            <if test="itemId != null and itemId != ''">
+                and item.itemId = #{itemId}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                and item.itemName like '%${itemName}%'
+            </if>
+            and item.isDelete = 0
+        </where>
+    </select>-->
+    <!--查询指定id的项目信息
+    <select id="selectItemById" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.Item">
+        select item.*,users.userName as userName
+        from item,users
+        <where>
+            item.userId = users.userId
+            and item.itemId = #{id}
+        </where>
+    </select>-->
+    <!--修改项目信息
+    <update id="updateOneItem" parameterType="com.yoozoo.bean.Item">
+        update item set itemName = #{itemName},userId = #{userId},itemDesc = #{itemDesc},updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            itemId = #{itemId}
+        </where>
+    </update>
+-->
+    <!--删除项目
+    <update id="deleteItemById" parameterType="com.yoozoo.bean.Item">
+        update item set isDelete = #{isDelete},updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            itemId = #{itemId}
+        </where>
+    </update>-->
+    <!--删除角色时，删除对应关联表中的信息
+    <update id="deleteMiddleRole" parameterType="com.yoozoo.bean.Role">
+        update user_role set isDelete = #{isDelete},updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            roleId = #{roleId}
+        </where>
+    </update>-->
+    <!--删除角色时，删除对应用户信息
+    <update id="deleteUsers" parameterType="com.yoozoo.bean.Role">
+        update users set isDelete = #{isDelete},updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            userId in (select userId from user_role where roleId = #{roleId})
+        </where>
+    </update>-->
+
+    <!--获取角色列表
+    <select id="selectRoleIdAndName"  resultType="com.yoozoo.bean.Role">
+        select roleId,roleName from role
+        <where>
+            isDelete  = 0;
+        </where>
+    </select>-->
+
+</mapper>

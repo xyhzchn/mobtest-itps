@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+>
+    <!-- 自动扫描注解的bean-->
+    <context:component-scan base-package="com.yoozoo.service" />
+    <!-- 定义用户service-->
+    <bean id="userService" class="com.yoozoo.service.impl.UserServiceImpl"/>
+
+    <!-- 定义角色service-->
+    <bean id="roleService" class="com.yoozoo.service.impl.RoleServiceImpl"/>
+
+    <!-- 定义项目service-->
+    <bean id="itemService" class="com.yoozoo.service.impl.ItemServiceImpl"/>
+
+    <!-- 定义接口service-->
+    <bean id="apiService" class="com.yoozoo.service.impl.ApiServiceImpl"/>
+
+    <!-- 定义参数service-->
+    <bean id="paramService" class="com.yoozoo.service.impl.ParamServiceImpl"/>
+
+    <!-- 定义周报service-->
+    <bean id="weekService" class="com.yoozoo.service.impl.WeekServiceImpl"/>
+
+    <!-- 文件上传定义-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="maxInMemorySize" value="40960" />
+    </bean>
+
+
+
+</beans>

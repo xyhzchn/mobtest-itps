@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoozoo.mapper.ApiMapper">
+
+    <resultMap id="base_result_map" type="com.yoozoo.bean.Api" >
+        <result column="apiId" property="apiId"/>
+        <result column="itemId" property="itemId"/>
+        <result column="itemName" property="itemName"/>
+        <result column="apiName" property="apiName"/>
+        <result column="apiDesc" property="apiDesc"/>
+        <result column="method" property="method"/>
+        <result column="apiHost" property="apiHost"/>
+        <result column="ipAddr" property="ipAddr"/>
+        <result column="apiPort" property="apiPort"/>
+        <result column="url" property="url"/>
+        <result column="userId" property="creator"/>
+        <result column="userName" property="creatorName"/>
+        <result column="paramType" property="paramType"/>
+        <result column="requestHeader" property="requestHeader"/>
+        <result column="requestOriginBody" property="requestOriginBody"/>
+        <result column="requestBody" property="requestBody"/>
+        <result column="statusCode" property="statusCode"/>
+        <result column="responseHeader" property="responseHeader"/>
+        <result column="responseOriginBody" property="responseOriginBody"/>
+        <result column="decodeType" property="decodeType"/>
+        <result column="requestTime" property="requestTime" javaType="java.sql.Timestamp"/>
+        <result column="responseTime" property="responseTime" javaType="java.sql.Timestamp"/>
+        <result column="isDelete" property="isDelete"/>
+        <result column="createTime" property="createTime" javaType="java.sql.Timestamp"/>
+        <result column="updateTime" property="updateTime" javaType="java.sql.Timestamp"/>
+        <result column="runResult" property="runResult"/>
+    </resultMap>
+
+    <!--添加接口到数据库-->
+    <insert id="insertOneApi" parameterType="com.yoozoo.bean.Api" useGeneratedKeys="true" keyProperty="apiId">
+        insert into api(
+          itemId,apiName,apiDesc,method,apiHost,ipAddr,apiPort,url,creator, paramType,
+          requestHeader,requestOriginBody,requestBody,statusCode,responseHeader, responseOriginBody,responseBody,
+          decodeType,requestTime,responseTime,isDelete,createTime,updateTime)
+          values(
+          #{itemId},#{apiName},#{apiDesc},#{method},#{apiHost},#{ipAddr},#{apiPort},#{url},#{creator},#{paramType},
+          #{requestHeader},#{requestOriginBody},#{requestBody},#{statusCode},#{responseHeader},#{responseOriginBody},#{responseBody},
+          #{decodeType},#{requestTime,jdbcType=TIMESTAMP}, #{responseTime,jdbcType=TIMESTAMP}, #{isDelete},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertCheckPoints" parameterType="com.yoozoo.bean.Point">
+        insert into point(apiId,pointType,isOpen,checkKey,expression,checkValue,isDelete)
+        values(#{apiId},#{pointType},#{isOpen},#{checkKey},#{expression},#{checkValue},#{isDelete})
+    </insert>
+
+    <!--查询接口列表，若无查询条件则查询所有列表，若有查询条件，则根据查询条件查询-->
+    <select id="selectAllApis" parameterType="com.yoozoo.bean.Api" resultMap="base_result_map">
+        select api.*,item.itemName,users.userName as userName,history.runResult as runResult
+        from api
+        inner join item on api.itemId = item.itemId
+        inner join users on api.creator = users.userId
+        left JOIN (
+                    SELECT a.*
+                    FROM (
+                            SELECT apiId, max(version) lastVersion
+                            FROM api_run_history
+                            GROUP BY apiId
+                          ) b
+                    JOIN api_run_history a
+                    ON a.apiId = b.apiId AND a.version = b.lastVersion
+                    ) as history
+        on api.apiId = history.apiId
+        <where>
+
+            <if test="apiId != null and apiId != ''">
+               and api.apiId= #{apiId}
+            </if>
+            <if test="apiName != null and apiName != ''">
+                and api.apiName like '%${apiName}%'
+            </if>
+            <if test="runResult != null and runResult != ''">
+                and history.runResult =#{runResult}
+            </if>
+            <if test="itemId != null and itemId != ''">
+                and api.itemId =#{itemId}
+            </if>
+                and api.isDelete = 0
+        </where>
+    </select>
+    <!--查询指定id的接口信息-->
+    <select id="selectOneApiById" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.Api">
+        select * from api
+        <where>
+            and api.apiId = #{apiId}
+        </where>
+    </select>
+    <!--查询指定id的接口下的检查点列表-->
+    <select id="selectAllPointByApiId" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.Point">
+        select * from point
+        <where>
+            and point.apiId = #{apiId}
+            and point.isDelete = 0
+        </where>
+    </select>
+    <!--修改接口响应信息-->
+    <update id="updateOneApi" parameterType="com.yoozoo.bean.Api">
+        update api set
+        statusCode = #{statusCode},
+        responseHeader = #{responseHeader},
+        responseBody = #{responseBody},
+        responseOriginBody = #{responseOriginBody},
+        requestTime = #{requestTime,jdbcType=TIMESTAMP},
+        responseTime = #{responseTime,jdbcType=TIMESTAMP}
+        <where>
+            apiId = #{apiId}
+        </where>
+    </update>
+
+    <!--修改接口请求信息-->
+    <update id="updateApiRequestInfo" parameterType="com.yoozoo.bean.Api">
+        update api set
+        apiName = #{apiName},
+        apiDesc = #{apiDesc},
+        method = #{method},
+        apiHost = #{apiHost},
+        ipAddr = #{ipAddr},
+        apiPort = #{apiPort},
+        url = #{url},
+        creator = #{creator},
+        paramType = #{paramType},
+        requestHeader = #{requestHeader},
+        requestOriginBody = #{requestOriginBody},
+        requestBody = #{requestBody},
+        decodeType = #{decodeType},
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            apiId = #{apiId}
+        </where>
+    </update>
+
+    <delete id="deleteCheckPointByApiId" parameterType="java.lang.Integer">
+        delete from point
+        <where>
+            point.apiId = #{apiId}
+        </where>
+    </delete>
+
+    <!--查询当前接口所有的检查点执行日志-->
+    <select id="selectAllRunLogByApiId" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.RunLog">
+        select * from runlog
+        <where>
+            runlog.apiId = #{apiId}
+        </where>
+    </select>
+    <!--查询当前接口执行日志的最大版本号-->
+    <select id="selectMaxVersionByApiId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select max(version) from runlog
+        <where>
+            runlog.apiId = #{apiId}
+        </where>
+    </select>
+    <!--添加检查点执行日志-->
+    <insert id="insertOneRunLog" parameterType="com.yoozoo.bean.RunLog">
+        insert into runlog (apiId,checkType,runResult,reason,version,createTime)
+        values(#{apiId},#{checkType},#{runResult},#{reason},#{version},#{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--查询测试用例中检查点的执行结果针对某一测试用例的某一版本测试-->
+    <select id="selectAllCheckResult" resultType="java.lang.Integer">
+        select runResult from runlog
+        <where>
+            <if test="apiId != null and apiId != ''">
+                and runlog.apiId= #{apiId}
+            </if>
+            <if test="version != null and version != ''">
+                and runlog.version= #{version}
+            </if>
+        </where>
+    </select>
+
+    <!--添加测试用例执行结果-->
+    <insert id="insertOneApiRunHistory" parameterType="com.yoozoo.bean.ApiRunHistory">
+        insert into api_run_history (apiId,version,runResult,runUser,createTime)
+        values(#{apiId},#{version},#{runResult},#{runUser},#{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--删除接口-->
+    <delete id="deleteApiById" parameterType="com.yoozoo.bean.Api">
+        delete from api
+        <where>
+            apiId = #{apiId}
+        </where>
+    </delete>
+    <!--删除接口时，删除接口对应执行日志信息-->
+    <delete id="deleteRunlogById" parameterType="java.lang.Integer">
+        delete from runlog
+        <where>
+            apiId = #{apiId}
+        </where>
+    </delete>
+    <!--查询当前接口所有的运行历史-->
+    <select id="getAllHistoryByApiId" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.ApiRunHistory">
+        select * from api_run_history
+        <where>
+            api_run_history.apiId = #{apiId}
+        </where>
+    </select>
+
+    <!--删除接口时，删除接口对应执行历史-->
+    <delete id="deleteHistoryById" parameterType="java.lang.Integer">
+        delete from api_run_history
+        <where>
+            apiId = #{apiId}
+        </where>
+    </delete>
+
+</mapper>

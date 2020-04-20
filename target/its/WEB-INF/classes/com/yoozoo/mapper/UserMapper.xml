@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoozoo.mapper.UserMapper">
+    <!--定义返回map-->
+    <resultMap id="base_user_map" type="com.yoozoo.bean.User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="realName" property="realName"/>
+        <result column="nickName" property="nickName"/>
+        <result column="seatNum" property="seatNum"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="roleId" property="roleId"/>
+        <result column="roleName" property="roleName"/>
+        <result column="updateTime" property="updateTime" javaType="java.sql.Timestamp"/>
+    </resultMap>
+
+    <!--定义登录返回map-->
+    <resultMap id="user_login_map" type="com.yoozoo.bean.User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="isDelete" property="isDelete"/>
+        <result column="roleId" property="roleId"/>
+    </resultMap>
+
+    <select id="getUserByName" parameterType="com.yoozoo.bean.User" resultMap="user_login_map">
+        select
+            users.userId as userId,
+            users.userName as userName,
+            users.pswd as password,
+            users.isDelete as isDelete,
+            role.roleId as roleId
+        from
+          users join user_role
+        on users.userId = user_role.userId
+          join role
+        on role.roleId = user_role.roleId
+        <where>
+            users.userName = #{userName}
+        </where>
+    </select>
+    <!--查询所有的用户列表-->
+    <select id="selectAllUsers" parameterType="com.yoozoo.bean.User" resultMap="base_user_map">
+        select
+        users.*,role.roleId roleId,role.roleName roleName
+        from
+        users inner join user_role
+        on users.userId = user_role.userId
+        inner join role
+        on user_role.roleId = role.roleId
+        <where>
+            <if test="userId != null and userId != ''">
+                users.userId = #{userId}
+            </if>
+            <if test="realName != null and realName != ''">
+                and users.realName like '%${realName}%'
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and users.nickName like '%${nickName}%'
+            </if>
+            <if test="roleId != null and roleId != ''">
+                and role.roleId = #{roleId}
+            </if>
+                and role.isDelete = 0;
+        </where>
+    </select>
+    <!--根据用户ID查询用户-->
+    <select id="selectUserById" parameterType="java.lang.Integer" resultMap="base_user_map">
+        select
+        users.*,role.roleId roleId,role.roleName roleName
+        from
+        users inner join user_role
+        on users.userId = user_role.userId
+        inner join role
+        on user_role.roleId = role.roleId
+        <where>
+                users.userId = #{id}
+        </where>
+    </select>
+    <!--添加用户-->
+    <insert id="insertOneUser" parameterType="com.yoozoo.bean.User">
+        <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into users
+        (userName,realName,nickName,pswd,seatNum,phone,email,isDelete,createTime,updateTime)
+        values(
+        #{userName},
+        #{realName},
+        #{nickName},
+        #{password},
+        #{seatNum},
+        #{phone},
+        #{email},
+        #{isDelete},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <!--添加用户时，添加关联表信息-->
+    <insert id="addUserRole" parameterType="com.yoozoo.bean.User">
+        insert into user_role
+        (userId,roleId,isDelete,createTime,updateTime)
+        values(
+        #{userId},
+        #{roleId},
+        #{isDelete},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <!--修改用户-->
+    <update id="updateUserById" parameterType="com.yoozoo.bean.User">
+        update users set
+       userName =  #{userName},
+       realName =  #{realName},
+       nickName =  #{nickName},
+       seatNum = #{seatNum},
+       phone =  #{phone},
+       email = #{email},
+       updateTime = #{updateTime,jdbcType=TIMESTAMP}
+       <where>
+           userId = #{userId}
+       </where>
+    </update>
+
+    <!--修改用户相关联的user_role表-->
+    <update id="updateUserRole" parameterType="com.yoozoo.bean.User">
+        update user_role set
+        roleId = #{roleId},
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            userId = #{userId}
+        </where>
+    </update>
+
+    <!--禁用用户-->
+    <update id="setUserDelete" parameterType="com.yoozoo.bean.User">
+      update users set
+        isDelete = 1,
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      <where>
+          userId = #{userId}
+      </where>
+    </update>
+
+    <update id="setUserRoleDelete" parameterType="com.yoozoo.bean.User">
+        update user_role set
+        isDelete = 1,
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            userId = #{userId}
+        </where>
+    </update>
+
+    <!--启用用户-->
+    <update id="setUserNotDelete" parameterType="com.yoozoo.bean.User">
+        update users set
+        isDelete = 0,
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            userId = #{userId}
+        </where>
+    </update>
+
+    <update id="setUserRoleNotDelete" parameterType="com.yoozoo.bean.User">
+        update user_role set
+        isDelete = 0,
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        <where>
+            userId = #{userId}
+        </where>
+    </update>
+
+    <!--修改用户密码-->
+    <update id="updateUserPswd" parameterType="com.yoozoo.bean.User">
+        update users set pswd = #{password}
+        <where>
+            userName = #{userName}
+        </where>
+    </update>
+
+</mapper>

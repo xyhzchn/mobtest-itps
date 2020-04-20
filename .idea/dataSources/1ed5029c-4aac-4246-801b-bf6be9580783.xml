@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - its@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+    <schema id="1" name="its">
+      <visible>1</visible>
+    </schema>
+    <schema id="2" name="ceshi"/>
+    <schema id="3" name="information_schema"/>
+    <schema id="4" name="mysql"/>
+    <schema id="5" name="performance_schema"/>
+    <schema id="6" name="sakila"/>
+    <schema id="7" name="sys"/>
+    <schema id="8" name="test"/>
+    <schema id="9" name="world"/>
+    <table id="10" parent="1" name="role"/>
+    <table id="11" parent="1" name="user_role"/>
+    <table id="12" parent="1" name="users"/>
+    <table id="13" parent="1" name="item"/>
+    <table id="14" parent="1" name="api"/>
+    <table id="15" parent="1" name="runlog"/>
+    <table id="16" parent="1" name="param"/>
+    <table id="17" parent="1" name="point"/>
+    <table id="18" parent="1" name="api_run_history"/>
+    <table id="19" parent="1" name="caseandbug"/>
+    <table id="20" parent="1" name="currentweek"/>
+    <table id="21" parent="1" name="nextweek"/>
+    <table id="22" parent="1" name="week"/>
+    <table id="23" parent="1" name="week_user"/>
+    <column id="24" parent="10" name="roleId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="25" parent="10" name="roleName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="26" parent="10" name="roleDesc">
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="27" parent="10" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="28" parent="10" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="29" parent="10" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <key id="30" parent="10" name="PRIMARY">
+      <columns>roleId</columns>
+      <primary>1</primary>
+    </key>
+    <column id="31" parent="11" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="32" parent="11" name="userId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="33" parent="11" name="roleId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="34" parent="11" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="35" parent="11" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="36" parent="11" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="37" parent="11" name="FK_Reference_1">
+      <columns>userId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <index id="38" parent="11" name="FK_Reference_2">
+      <columns>roleId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="39" parent="11" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="40" parent="11" name="FK_Reference_1">
+      <columns>userId</columns>
+      <ref-key>~.users.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <foreign-key id="41" parent="11" name="FK_Reference_2">
+      <columns>roleId</columns>
+      <ref-key>~.role.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="42" parent="12" name="userId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="43" parent="12" name="userName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="44" parent="12" name="realName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="45" parent="12" name="nickName">
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="46" parent="12" name="pswd">
+      <mandatory>1</mandatory>
+      <data-type>varchar(30)|0</data-type>
+    </column>
+    <column id="47" parent="12" name="seatNum">
+      <mandatory>1</mandatory>
+      <data-type>varchar(20)|0</data-type>
+    </column>
+    <column id="48" parent="12" name="phone">
+      <mandatory>1</mandatory>
+      <data-type>varchar(30)|0</data-type>
+    </column>
+    <column id="49" parent="12" name="email">
+      <mandatory>1</mandatory>
+      <data-type>varchar(30)|0</data-type>
+    </column>
+    <column id="50" parent="12" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="51" parent="12" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="52" parent="12" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <key id="53" parent="12" name="PRIMARY">
+      <columns>userId</columns>
+      <primary>1</primary>
+    </key>
+    <column id="54" parent="13" name="itemId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="55" parent="13" name="userId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="56" parent="13" name="itemName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="57" parent="13" name="itemDesc">
+      <mandatory>1</mandatory>
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="58" parent="13" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="59" parent="13" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="60" parent="13" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="61" parent="13" name="FK_Reference_3">
+      <columns>userId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="62" parent="13" name="PRIMARY">
+      <columns>itemId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="63" parent="13" name="FK_Reference_3">
+      <columns>userId</columns>
+      <ref-key>~.users.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="64" parent="14" name="apiId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="65" parent="14" name="itemId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="66" parent="14" name="apiName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="67" parent="14" name="apiDesc">
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="68" parent="14" name="method">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="69" parent="14" name="apiHost">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="70" parent="14" name="ipAddr">
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="71" parent="14" name="apiPort">
+      <data-type>varchar(20)|0</data-type>
+    </column>
+    <column id="72" parent="14" name="url">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="73" parent="14" name="creator">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="74" parent="14" name="paramType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="75" parent="14" name="requestHeader">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="76" parent="14" name="requestOriginBody">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="77" parent="14" name="requestBody">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="78" parent="14" name="statusCode">
+      <data-type>varchar(30)|0</data-type>
+    </column>
+    <column id="79" parent="14" name="responseHeader">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="80" parent="14" name="responseOriginBody">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="81" parent="14" name="responseBody">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="82" parent="14" name="decodeType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="83" parent="14" name="requestTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="84" parent="14" name="responseTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="85" parent="14" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="86" parent="14" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="87" parent="14" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="88" parent="14" name="FK_Reference_5">
+      <columns>itemId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="89" parent="14" name="PRIMARY">
+      <columns>apiId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="90" parent="14" name="FK_Reference_5">
+      <columns>itemId</columns>
+      <ref-key>~.item.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="91" parent="15" name="runId">
+      <mandatory>1</mandatory>
+      <data-type>bigint(20)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="92" parent="15" name="apiId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="93" parent="15" name="checkType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="94" parent="15" name="runResult">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="95" parent="15" name="reason">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="96" parent="15" name="version">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="97" parent="15" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="98" parent="15" name="FK_Reference_7">
+      <columns>apiId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="99" parent="15" name="PRIMARY">
+      <columns>runId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="100" parent="15" name="FK_Reference_7">
+      <columns>apiId</columns>
+      <ref-key>~.api.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="101" parent="16" name="paramId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="102" parent="16" name="apiId">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="103" parent="16" name="paramName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="104" parent="16" name="paramDesc">
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="105" parent="16" name="paramType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="106" parent="16" name="paramCondition">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="107" parent="16" name="paramValue">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="108" parent="16" name="isGlobal">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="109" parent="16" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="110" parent="16" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="111" parent="16" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <key id="112" parent="16" name="PRIMARY">
+      <columns>paramId</columns>
+      <primary>1</primary>
+    </key>
+    <column id="113" parent="17" name="pointId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="114" parent="17" name="apiId">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="115" parent="17" name="pointType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="116" parent="17" name="isOpen">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="117" parent="17" name="checkKey">
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="118" parent="17" name="expression">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="119" parent="17" name="checkValue">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="120" parent="17" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <index id="121" parent="17" name="FK_Reference_6">
+      <columns>apiId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="122" parent="17" name="PRIMARY">
+      <columns>pointId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="123" parent="17" name="FK_Reference_6">
+      <columns>apiId</columns>
+      <ref-key>~.api.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="124" parent="18" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="125" parent="18" name="apiId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="126" parent="18" name="version">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="127" parent="18" name="runResult">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="128" parent="18" name="runUser">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="129" parent="18" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="130" parent="18" name="FK_Reference_8">
+      <columns>apiId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="131" parent="18" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="132" parent="18" name="FK_Reference_8">
+      <columns>apiId</columns>
+      <ref-key>~.api.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="133" parent="19" name="cabId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="134" parent="19" name="id">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="135" parent="19" name="remaining">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="136" parent="19" name="suggest">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="137" parent="19" name="case_P1">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="138" parent="19" name="case_P2">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="139" parent="19" name="case_P3">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="140" parent="19" name="case_P4">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="141" parent="19" name="bug_P1">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="142" parent="19" name="bug_P2">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="143" parent="19" name="bug_P3">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="144" parent="19" name="bug_P4">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="145" parent="19" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="146" parent="19" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="147" parent="19" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="148" parent="19" name="FK_Reference_12">
+      <columns>id</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="149" parent="19" name="PRIMARY">
+      <columns>cabId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="150" parent="19" name="FK_Reference_12">
+      <columns>id</columns>
+      <ref-key>~.week_user.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="151" parent="20" name="detailId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="152" parent="20" name="id">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="153" parent="20" name="workType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="154" parent="20" name="jiraId">
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="155" parent="20" name="projectName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <column id="156" parent="20" name="content">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="157" parent="20" name="progress">
+      <mandatory>1</mandatory>
+      <data-type>float|0</data-type>
+    </column>
+    <column id="158" parent="20" name="isOnline">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="159" parent="20" name="isRegressionTest">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="160" parent="20" name="estimatedTime">
+      <mandatory>1</mandatory>
+      <data-type>float|0</data-type>
+    </column>
+    <column id="161" parent="20" name="realTime">
+      <mandatory>1</mandatory>
+      <data-type>float|0</data-type>
+    </column>
+    <column id="162" parent="20" name="otherDesc">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="163" parent="20" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="164" parent="20" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="165" parent="20" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="166" parent="20" name="FK_Reference_11">
+      <columns>id</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="167" parent="20" name="PRIMARY">
+      <columns>detailId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="168" parent="20" name="FK_Reference_11">
+      <columns>id</columns>
+      <ref-key>~.week_user.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="169" parent="21" name="nextWeekId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="170" parent="21" name="id">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="171" parent="21" name="workType">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="172" parent="21" name="jiraId">
+      <data-type>varchar(200)|0</data-type>
+    </column>
+    <column id="173" parent="21" name="projectName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(100)|0</data-type>
+    </column>
+    <column id="174" parent="21" name="content">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="175" parent="21" name="yujiTestDate">
+      <mandatory>1</mandatory>
+      <data-type>date|0</data-type>
+    </column>
+    <column id="176" parent="21" name="yujiDoneDate">
+      <mandatory>1</mandatory>
+      <data-type>date|0</data-type>
+    </column>
+    <column id="177" parent="21" name="otherDesc">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="178" parent="21" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="179" parent="21" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="180" parent="21" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <index id="181" parent="21" name="FK_Reference_13">
+      <columns>id</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="182" parent="21" name="PRIMARY">
+      <columns>nextWeekId</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="183" parent="21" name="FK_Reference_13">
+      <columns>id</columns>
+      <ref-key>~.week_user.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <column id="184" parent="22" name="weekId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="185" parent="22" name="startDate">
+      <mandatory>1</mandatory>
+      <data-type>date|0</data-type>
+    </column>
+    <column id="186" parent="22" name="endDate">
+      <mandatory>1</mandatory>
+      <data-type>date|0</data-type>
+    </column>
+    <column id="187" parent="22" name="isDelete">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="188" parent="22" name="createTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <column id="189" parent="22" name="updateTime">
+      <data-type>datetime|0</data-type>
+    </column>
+    <key id="190" parent="22" name="PRIMARY">
+      <columns>weekId</columns>
+      <primary>1</primary>
+    </key>
+    <column id="191" parent="23" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="192" parent="23" name="weekId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="193" parent="23" name="userId">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="194" parent="23" name="userName">
+      <mandatory>1</mandatory>
+      <data-type>varchar(50)|0</data-type>
+    </column>
+    <index id="195" parent="23" name="FK_Reference_10">
+      <columns>userId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <index id="196" parent="23" name="FK_Reference_9">
+      <columns>weekId</columns>
+      <desc-columns></desc-columns>
+    </index>
+    <key id="197" parent="23" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="198" parent="23" name="FK_Reference_9">
+      <columns>weekId</columns>
+      <ref-key>~.week.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+    <foreign-key id="199" parent="23" name="FK_Reference_10">
+      <columns>userId</columns>
+      <ref-key>~.users.PRIMARY</ref-key>
+      <cascade-update-rule>restrict</cascade-update-rule>
+      <cascade-delete-rule>restrict</cascade-delete-rule>
+    </foreign-key>
+  </database-model>
+</dataSource>

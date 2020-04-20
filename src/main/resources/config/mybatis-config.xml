@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 别名的定义 -->
+    <typeAliases>
+        <!-- 批量定义别名 ，指定包名，自动扫描包中的类，别名即为类名，首字母大小写无所谓-->
+        <package name="com.yoozoo.bean"/>
+    </typeAliases>
+
+    <plugins>
+        <!-- 分页查询插件 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="helperDialect" value="mysql" />
+            <property name="reasonable" value="true" />
+        </plugin>
+    </plugins>
+
+    <mappers>
+        <!-- 通过扫描包的方式来进行批量加载映射文件 -->
+        <package name="com.yoozoo.dao.mapping"/>
+    </mappers>
+</configuration>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoozoo.mapper.WeekMapper">
+    <!--定义返回map
+    <resultMap id="base_user_map" type="com.yoozoo.bean.User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="realName" property="realName"/>
+        <result column="nickName" property="nickName"/>
+        <result column="seatNum" property="seatNum"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="roleId" property="roleId"/>
+        <result column="roleName" property="roleName"/>
+        <result column="updateTime" property="updateTime" javaType="java.sql.Timestamp"/>
+    </resultMap>-->
+
+    <!--定义登录返回记map
+    <resultMap id="user_login_map" type="com.yoozoo.bean.User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="isDelete" property="isDelete"/>
+        <result column="roleId" property="roleId"/>
+    </resultMap>-->
+
+    <!--获取所有的周信息-->
+    <select id="selectAllWeek" parameterType="com.yoozoo.bean.Week" resultType="com.yoozoo.bean.Week">
+        select weekId,startDate,endDate from week
+        <where>
+            and isDelete = 0
+            order by endDate desc
+        </where>
+    </select>
+
+    <!--根据真实名字查询出对应的用户id-->
+    <select id="getUserIdByRealName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select userId from users
+        <where>
+            <if test="userName != null and userName != ''">
+                realName = #{userName}
+            </if>
+            and isDelete = 0;
+        </where>
+    </select>
+
+    <!--根据周的结束时间，查询是否存在周信息-->
+    <select id="selectWeeklyIdbyDate" parameterType="java.util.Date" resultType="java.lang.Integer">
+        select weekId from week
+        <where>
+            endDate = #{endDate}
+            and isDelete = 0;
+        </where>
+
+    </select>
+
+    <!--根据周id和用户id查询该用户的周报是否上传-->
+    <select id="selectWeekUserId" parameterType="com.yoozoo.bean.Week" resultType="java.lang.Integer">
+        select id from week_user
+        <where>
+            <if test="selectWeek > 0">
+                weekId = #{selectWeek}
+            </if>
+            <if test="selectUser > 0">
+                and userId = #{selectUser}
+            </if>
+            and isDelete = 0
+        </where>
+
+    </select>
+
+    <!--根据月份信息查询该月份包含的周id列表-->
+    <select id="selectWeekId" parameterType="com.yoozoo.bean.Week" resultType="java.lang.Integer">
+        select weekId from `week`
+        <where>
+            <if test="selectMonth > 0">
+                year(CURDATE()) and MONTH(startDate) = #{selectMonth}
+            </if>
+            and isDelete = 0
+        </where>
+
+    </select>
+
+    <!--添加周信息到数据库-->
+    <insert id="insertOneWeek" parameterType="com.yoozoo.bean.Week" useGeneratedKeys="true" keyProperty="weekId">
+       insert into week(
+        startDate,endDate,isDelete,createTime,updateTime)
+        values(
+        #{startDate,jdbcType=DATE},#{endDate,jdbcType=DATE},#{isDelete},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--添加周信息和用户信息到关联表-->
+    <insert id="insertOneWeekUser" parameterType="com.yoozoo.bean.Week" useGeneratedKeys="true" keyProperty="id">
+        insert into week_user(
+        weekId,userId,userName,,isDelete,createTime,updateTime)
+        values(
+        #{weekId},#{userId},#{userName},#{isDelete},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--添加周报对应的所有记录到数据库-->
+    <insert id="insertCurrentWeek" parameterType="java.util.List">
+        insert into currentweek(
+        id,workType,jiraId,projectName,content,progress,isOnline,isRegressionTest,estimatedTime,realTime,
+        otherDesc,isDelete,createTime,updateTime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},#{item.workType},#{item.jiraId},#{item.projectName},#{item.content},#{item.progress},#{item.isOnline},#{item.isRegressionTest},
+            #{item.estimatedTime},#{item.realTime},#{item.otherDesc},#{item.isDelete},#{item.createTime,jdbcType=TIMESTAMP},#{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <!--添加周报中的用例和bug等数据到数据库-->
+    <insert id="insertCaseAndBug" parameterType="com.yoozoo.bean.CaseAndBug">
+        insert into caseandbug(
+        id,remaining,suggest,case_P1,case_P2,case_P3,case_P4,bug_P1,bug_P2,bug_P3,bug_P4,isDelete,createTime,updateTime )
+        values(
+        #{id},#{remaining},#{suggest},#{case_P1},#{case_P2},#{case_P3},#{case_P4},#{bug_P1},#{bug_P2},#{bug_P3},#{bug_P4},#{isDelete},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--添加周报对应的下周计划中所有记录到数据库-->
+    <insert id="insertNextWeek" parameterType="java.util.List">
+        insert into nextweek(
+        id,workType,jiraId,projectName,content,yujiTestDate,yujiDoneDate,otherDesc,isDelete,createTime,updateTime
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id}, #{item.workType}, #{item.jiraId}, #{item.projectName}, #{item.content}, #{item.yujiTestDate,jdbcType=DATE}, #{item.yujiDoneDate,jdbcType=DATE}, #{item.otherDesc}, #{item.isDelete}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+
+    </insert>
+
+    <!--获取某周下所有用户的id和name-->
+    <select id="selectUserListByWeekId" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.Week">
+        select * from week_user
+        <where>
+            <if test="selectWeek > 0">
+                weekId = #{selectWeek}
+            </if>
+            and isDelete = 0
+        </where>
+    </select>
+
+    <!--获取某月下所有用户的id和name-->
+    <select id="selectUserListByMonth" parameterType="java.lang.Integer" resultType="com.yoozoo.bean.Week">
+        select week_user.userId,week_user.userName from `week`
+        inner join week_user
+        on `week`.weekId = week_user.weekId
+        <where>
+            <if test="month > 0 ">
+                year(CURDATE()) and month(`week`.startDate) = #{month} and `week`.isDelete = 0  group by week_user.userId
+            </if>
+        </where>
+    </select>
+
+    <!--根据查询条件查询周信息-->
+    <select id="selectWeekly" parameterType="com.yoozoo.bean.Week" resultType="com.yoozoo.bean.Week">
+        select `week`.* from `week`
+        <where>
+            <if test="selectWeek > 0">
+                `week`.weekId = #{selectWeek}
+            </if>
+            and `week`.isDelete = 0
+        </where>
+    </select>
+
+    <!--获取某周下所有用户的所有周报列表-->
+    <select id="selectCurrentWeek" parameterType="com.yoozoo.bean.Week" resultType="com.yoozoo.bean.CurrentWeek">
+        select currentweek.*, week_user.userId,week_user.userName from currentweek
+        inner join
+        week_user
+        on week_user.id = currentweek.id
+        <where>
+            week_user.id in
+            <foreach collection="weekUserIds" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+            <if test="selectUser > 0">
+                and week_user.userId = #{selectUser}
+            </if>
+            and week_user.isDelete = 0
+        </where>
+    </select>
+
+    <!--获取某周下所有用户的所有用例数和bug数等信息-->
+    <select id="selectCaseAndBug" parameterType="com.yoozoo.bean.Week" resultType="com.yoozoo.bean.CaseAndBug">
+        select caseandbug.*, week_user.userId,week_user.userName
+        from caseandbug
+        inner join week_user
+        on week_user.id = caseandbug.id
+        <where>
+            week_user.id in
+            <foreach collection="weekUserIds" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+            <if test="selectUser > 0">
+                and week_user.userId = #{selectUser}
+            </if>
+            and week_user.isDelete = 0
+        </where>
+    </select>
+
+    <!--根据周报id和用户的id查询出该周某个人的下周计划信息-->
+    <select id="selectNextWeek" parameterType="com.yoozoo.bean.Week" resultType="com.yoozoo.bean.NextWeek">
+        select nextweek.*, week_user.userId,week_user.userName
+        from nextweek
+        inner join week_user
+        on week_user.id = nextweek.id
+        <where>
+            week_user.id in
+            <foreach collection="weekUserIds" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+            <if test="selectUser > 0">
+                and week_user.userId = #{selectUser}
+            </if>
+            and week_user.isDelete = 0
+        </where>
+    </select>
+
+    <!--获取多个周下所有用户的id和name-->
+    <select id="selectUserListByWeekList" parameterType="java.util.List" resultType="com.yoozoo.bean.Week">
+        select * from week_user
+       <where>
+           weekId in
+              <foreach collection="weekIdList" item="weekId" index="index" open="(" close=")" separator=",">
+                #{weekId}
+              </foreach>
+           and isDelete = 0
+       </where>
+        group by userId HAVING count(userId)>1
+    </select>
+
+    <!--获取多个月下所有用户的id和name-->
+    <select id="selectUserListByMonthList" parameterType="java.util.List" resultType="com.yoozoo.bean.Week">
+        select week_user.* from week_user
+        inner JOIN
+        `week`
+        on week_user.weekId = `week`.weekId
+        <where>
+            month(startDate) in
+            <foreach collection="monthList" item="month" index="index" open="(" close=")" separator=",">
+                #{month}
+            </foreach>
+        </where>
+        group by userId HAVING count(userId) >= 8
+        and isDelete = 0
+    </select>
+
+    <!--根据关联id查询对应的总的预计时间和实际时间-->
+    <select id="selectCurrentWeekCompare" parameterType="java.util.List" resultType="com.yoozoo.bean.CurrentWeek">
+        select sum(estimatedTime) as totalEstimatedTime,sum(realTime) as totalRealTime
+        from currentweek
+        <where>
+            id in
+            <foreach collection="weekUserIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+            and isDelete = 0
+        </where>
+    </select>
+
+    <!--根据关联id查询对应的总的预计时间和实际时间-->
+    <select id="selectCaseAndBugCompare" parameterType="java.util.List" resultType="com.yoozoo.bean.CaseAndBug">
+        select SUM(case_P1+case_P2+case_P3+case_P4) as totalCase,sum(bug_P1+bug_P2+bug_P3+bug_P4) as totalBug
+        from caseandbug
+        <where>
+            id in
+            <foreach collection="weekUserIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+            and isDelete = 0
+        </where>
+    </select>
+
+
+
+    <!--根据月份和用户id查询出该月下关联id-->
+    <select id="selectWeekUserIdByMonth" parameterType="com.yoozoo.bean.Week" resultType="java.lang.Integer">
+        select week_user.id from week_user
+        inner JOIN
+        `week`
+        on week_user.weekId = `week`.weekId
+        <where>
+            <if test="selectMonth > 0">
+                year(CURDATE()) and month(`week`.startDate) = #{selectMonth}
+            </if>
+                and `week`.isdelete = 0
+            <if test="selectUser > 0">
+                and week_user.userId = #{selectUser}
+            </if>
+
+        </where>
+
+    </select>
+
+
+
+
+</mapper>
